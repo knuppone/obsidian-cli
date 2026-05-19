@@ -127,6 +127,10 @@ obsidian-cli --backend rest command run "periodic-notes:open-daily-note"
 3. Or `unset OBSIDIAN_API_KEY` to use the key from `.obsidian/plugins/obsidian-local-rest-api/data.json`
 4. Ensure `OBSIDIAN_API_KEY` is exported in the same shell that runs the CLI
 
+## Agent skill (Cursor)
+
+Project skill for agents: [`.cursor/skills/obsidian-cli/SKILL.md`](.cursor/skills/obsidian-cli/SKILL.md). Invoke with `@obsidian-cli`. The skill tells agents to run `obsidian-cli --help` (and subcommand `--help`) for examples.
+
 ## Tests
 
 ```bash

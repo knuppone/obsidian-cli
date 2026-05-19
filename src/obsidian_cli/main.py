@@ -11,11 +11,12 @@ from obsidian_cli.cli.file import file_app
 from obsidian_cli.cli.periodic import periodic_app
 from obsidian_cli.cli.search import search_app
 from obsidian_cli.config import AppConfig, BackendKind, build_config
+from obsidian_cli.help_text import DOCTOR_DOC, MAIN_CALLBACK_DOC
 from obsidian_cli.output import emit_error, emit_json
 
 app = typer.Typer(
     name="obsidian-cli",
-    help="Operate on Obsidian vaults via filesystem or Local REST API.",
+    help=MAIN_CALLBACK_DOC,
     no_args_is_help=True,
 )
 
@@ -67,7 +68,6 @@ def main(
 
 @app.command("doctor")
 def doctor(ctx: typer.Context) -> None:
-    """Check vault resolution and REST API authentication."""
     config: AppConfig = config_from_ctx(ctx)
     report: dict[str, object] = dict(
         vault=str(config.vault_root),
@@ -85,6 +85,9 @@ def doctor(ctx: typer.Context) -> None:
             report["rest_ok"] = False
             report["error"] = str(exc)
     emit_json(report)
+
+
+doctor.__doc__ = DOCTOR_DOC
 
 
 @app.command("list-root")

@@ -6,9 +6,15 @@ from typing import Any, Optional
 import typer
 
 from obsidian_cli.cli.common import config_from_ctx, get_backend, get_rest_backend, load_json_query
+from obsidian_cli.help_text import (
+    SEARCH_GROUP_HELP,
+    SEARCH_JSON_DOC,
+    SEARCH_TAG_DOC,
+    SEARCH_TEXT_DOC,
+)
 from obsidian_cli.output import emit_error, emit_json
 
-search_app = typer.Typer(help="Search vault notes.")
+search_app = typer.Typer(help=SEARCH_GROUP_HELP)
 
 
 @search_app.command("text")
@@ -25,6 +31,9 @@ def search_text(
         emit_error(str(exc))
         raise typer.Exit(code=1) from exc
     emit_json(results)
+
+
+search_text.__doc__ = SEARCH_TEXT_DOC
 
 
 @search_app.command("json")
@@ -47,6 +56,9 @@ def search_json(
     emit_json(results)
 
 
+search_json.__doc__ = SEARCH_JSON_DOC
+
+
 @search_app.command("tag")
 def search_tag(
     ctx: typer.Context,
@@ -61,3 +73,6 @@ def search_tag(
         emit_error(str(exc))
         raise typer.Exit(code=1) from exc
     emit_json(dict(files=paths))
+
+
+search_tag.__doc__ = SEARCH_TAG_DOC

@@ -1,0 +1,105 @@
+---
+name: obsidian-cli
+description: >-
+  Operate Obsidian vaults via the obsidian-cli tool (file CRUD, search, patch,
+  active file, periodic notes, commands). Use when automating Obsidian notes,
+  vault search, heading/block/frontmatter edits, daily notes, or when the user
+  mentions obsidian-cli, Local REST API, or headless vault access.
+---
+
+# Obsidian CLI
+
+Use **`obsidian-cli`** from this repo (`pip install -e .`). Output is JSON on stdout unless `--human`.
+
+## First step: read `--help`
+
+The CLI documents itself with examples. **Run help before guessing flags:**
+
+```bash
+obsidian-cli --help
+obsidian-cli file --help
+obsidian-cli file patch --help
+obsidian-cli search --help
+obsidian-cli active --help      # REST only
+obsidian-cli periodic --help    # REST only
+obsidian-cli command --help     # REST only
+```
+
+Use the examples printed in help as copy-paste templates (adjust paths and vault).
+
+## Setup
+
+```bash
+export OBSIDIAN_VAULT="/absolute/path/to/vault"
+export OBSIDIAN_VERIFY_SSL=false
+
+# REST (--backend rest): Obsidian running + Local REST API plugin
+export OBSIDIAN_API_KEY="<from plugin settings>"
+obsidian-cli --backend rest doctor   # expect "rest_ok": true
+```
+
+Global flags: `--vault`, `--backend fs|rest`, `--api-key`.
+
+## Backend choice
+
+| Need | Backend |
+|------|---------|
+| Headless / CI / no Obsidian | `--backend fs` (default) |
+| Active file, periodic notes, JsonLogic search, command palette | `--backend rest` |
+
+## Typical workflows (see `--help` for full flags)
+
+**Explore vault (fs):**
+
+```bash
+obsidian-cli list-root
+obsidian-cli search text "quarterly"
+obsidian-cli file read notes/meeting.md
+```
+
+**Create or append a note (fs):**
+
+```bash
+obsidian-cli file write inbox/idea.md --content "# Idea\n"
+obsidian-cli file append inbox/idea.md --content "- [ ] follow up\n"
+```
+
+**Patch under a heading (fs or rest):**
+
+```bash
+obsidian-cli file patch notes/project.md \
+  --operation append --target-type heading --target "Tasks" \
+  --content "- [ ] Ship feature\n"
+```
+
+**Daily note via REST:**
+
+```bash
+obsidian-cli --backend rest periodic append daily \
+  --content "- [ ] Log entry\n"
+```
+
+**Edit open note in Obsidian (REST):**
+
+```bash
+obsidian-cli --backend rest active read
+obsidian-cli --backend rest active append --content "\n## Scratch\n"
+```
+
+## Agent rules
+
+1. Run the narrowest `--help` (e.g. `file patch --help`) before constructing a command.
+2. Prefer `file patch` over `file write` for partial edits.
+3. Use `search text` or `search tag` when the file path is unknown.
+4. Never log or commit `OBSIDIAN_API_KEY`.
+5. On `Error 40101`, run `obsidian-cli --backend rest doctor` and fix the key.
+
+## JSON output
+
+- `file read` → `{path, encoding, content, size}` (binary: `encoding: base64`)
+- Mutations → `{ok: true, message: "..."}`
+- `file read --metadata` → frontmatter + content
+
+## CLI vs direct edits
+
+Use the CLI for search, patch targets, REST-only features, and scripted vault ops. Edit files directly only for trivial known-path text changes in the same session.

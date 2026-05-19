@@ -7,9 +7,10 @@ import typer
 from obsidian_cli.cli.common import config_from_ctx, get_rest_backend
 from obsidian_cli.backends.rest import RestApiBackend
 from obsidian_cli.config import AppConfig
+from obsidian_cli.help_text import COMMAND_GROUP_HELP
 from obsidian_cli.output import emit_error, emit_json
 
-command_app = typer.Typer(help="List and run Obsidian commands (REST only).")
+command_app = typer.Typer(help=COMMAND_GROUP_HELP)
 
 
 def _rest(ctx: typer.Context) -> RestApiBackend:

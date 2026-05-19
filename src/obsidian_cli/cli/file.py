@@ -15,10 +15,17 @@ from obsidian_cli.cli.common import (
     read_bytes_option,
     read_content_option,
 )
-from obsidian_cli.models import PatchTarget
+from obsidian_cli.help_text import (
+    FILE_APPEND_DOC,
+    FILE_DELETE_DOC,
+    FILE_GROUP_HELP,
+    FILE_PATCH_DOC,
+    FILE_READ_DOC,
+    FILE_WRITE_DOC,
+)
 from obsidian_cli.output import emit_error, emit_json
 
-file_app = typer.Typer(help="Read, write, append, patch, or delete vault files.")
+file_app = typer.Typer(help=FILE_GROUP_HELP)
 
 
 @file_app.command("read")
@@ -35,6 +42,9 @@ def file_read(
         emit_error(str(exc))
         raise typer.Exit(code=1) from exc
     emit_file_or_metadata(result)
+
+
+file_read.__doc__ = FILE_READ_DOC
 
 
 @file_app.command("write")
@@ -57,6 +67,9 @@ def file_write(
     emit_json(dict(ok=True, message=f"Successfully wrote {filepath}"))
 
 
+file_write.__doc__ = FILE_WRITE_DOC
+
+
 @file_app.command("append")
 def file_append(
     ctx: typer.Context,
@@ -71,6 +84,9 @@ def file_append(
         emit_error(str(exc))
         raise typer.Exit(code=1) from exc
     emit_json(dict(ok=True, message=f"Successfully appended content to {filepath}"))
+
+
+file_append.__doc__ = FILE_APPEND_DOC
 
 
 @file_app.command("patch")
@@ -95,6 +111,9 @@ def file_patch(
     emit_json(dict(ok=True, message=f"Successfully patched content in {filepath}"))
 
 
+file_patch.__doc__ = FILE_PATCH_DOC
+
+
 @file_app.command("delete")
 def file_delete(
     ctx: typer.Context,
@@ -112,3 +131,6 @@ def file_delete(
         emit_error(str(exc))
         raise typer.Exit(code=1) from exc
     emit_json(dict(ok=True, message=f"Successfully deleted {filepath}"))
+
+
+file_delete.__doc__ = FILE_DELETE_DOC

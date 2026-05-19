@@ -19,9 +19,10 @@ from obsidian_cli.cli.common import (
 from obsidian_cli.models import Period
 from obsidian_cli.backends.rest import RestApiBackend
 from obsidian_cli.config import AppConfig
+from obsidian_cli.help_text import PERIODIC_GROUP_HELP
 from obsidian_cli.output import emit_error, emit_json
 
-periodic_app = typer.Typer(help="Periodic notes (REST only).")
+periodic_app = typer.Typer(help=PERIODIC_GROUP_HELP)
 
 
 def _rest(ctx: typer.Context) -> RestApiBackend:

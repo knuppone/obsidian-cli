@@ -17,9 +17,10 @@ from obsidian_cli.cli.common import (
     read_content_option,
 )
 from obsidian_cli.config import AppConfig
+from obsidian_cli.help_text import ACTIVE_GROUP_HELP
 from obsidian_cli.output import emit_error, emit_json
 
-active_app = typer.Typer(help="Read or write the file open in Obsidian (REST only).")
+active_app = typer.Typer(help=ACTIVE_GROUP_HELP)
 
 
 def _rest(ctx: typer.Context) -> RestApiBackend:
