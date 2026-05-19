@@ -1,0 +1,34 @@
+[project]
+name = "obsidian-cli"
+version = "0.1.0"
+description = "CLI for Obsidian vault operations with filesystem and Local REST API backends"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12.0",
+    "requests>=2.31.0",
+    "ruamel.yaml>=0.18.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "responses>=0.25.0",
+]
+
+[project.scripts]
+obsidian-cli = "obsidian_cli.main:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/obsidian_cli"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src/obsidian_cli" = "obsidian_cli"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

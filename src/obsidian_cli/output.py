@@ -1,0 +1,14 @@
+from __future__ import annotations
+
+import json
+import sys
+from typing import Any
+
+
+def emit_json(data: Any) -> None:
+    json.dump(data, sys.stdout, indent=2, ensure_ascii=False)
+    sys.stdout.write("\n")
+
+
+def emit_error(message: str) -> None:
+    sys.stderr.write(f"{message}\n")
